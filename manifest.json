@@ -1,11 +1,18 @@
 {
-  "manifest_version" : 2,
-  "name" : "Post Limit Checker",
-  "description" : "Make sure you never hit post limit again!",
-  "version" : "1.0",
-  "default_locale" : "en",
-  "offline_enabled" : false,
-  "page_action" : {
+  "manifest_version": 2,
+  "name": "Post Limit Checker",
+  "description": "Make sure you never hit post limit again!",
+  "version": "1.0",
+  "default_locale": "en",
+  "offline_enabled": false,
+  "page_action": {
     
-  }
+  },
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "permissions": [
+    "declarativeContent"
+  ]
 }
