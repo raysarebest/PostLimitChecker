@@ -1,7 +1,10 @@
 html{
   min-width: 250px;
+  /*width: 100%;*/
   min-height: 100px;
   text-align: center;
+  background: #36465d;
+  color: #fff;
 }
 h1{
   width: 100%;

@@ -3,11 +3,16 @@
 <head>
   <title>Check Post Limit</title>
   <link type="text/css" rel="stylesheet" href="popup.css"/>
+  <script src="popup.js"></script>
 </head>
 <body>
   <h1>Post Limit Checker</h1>
   <p>What blog do you want to check for?</p>
-  <input id="blog" placeholder="manpagesoflife"/>
-  <button>Check</button>
+  <form>
+    <input type="text" name="blog" placeholder="themanpagesoflife"/>
+    <input id="button" type="button" value="Check"/>
+  </form>
+  <h2>Posts Remaining:</h2>
+  <p id="count">--</p>
 </body>
 </html>

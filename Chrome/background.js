@@ -5,9 +5,13 @@ chrome.runtime.onInstalled.addListener(function(){
     //Add a new rule to load the extension
     chrome.declarativeContent.onPageChanged.addRules([{
       conditions: [new chrome.declarativeContent.PageStateMatcher({
-        pageUrl: {urlContains: "tumblr.com"}
+        pageUrl: {hostContains: "tumblr.com"}
       })],
       actions: [new chrome.declarativeContent.ShowPageAction()]
     }]);
   });
 });
+//Function to get the post data from tumblr
+function getPostData(callback){
+  callback();
+}
