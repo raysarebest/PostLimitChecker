@@ -5,5 +5,11 @@ document.addEventListener("DOMContentLoaded", function(){
 });
 //Function called each time the check button is clicked
 function update(){
-  document.getElementById("count").textContent = "0";
+  var request = new XMLHttpRequest();
+  request.onload = analyzeTumblrData;
+  request.open("GET", "http://example.com", true);
+  request.send();
+}
+function analyzeTumblrData(){
+  console.log(this.responseText);
 }

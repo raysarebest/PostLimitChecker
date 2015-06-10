@@ -1,4 +1,4 @@
 .DS_Store
 /**/.DS_Store
 #Make sure the oauth key is never checked into source control
-/**/oauth-key-you\'re-not-getting.js
+/**/oauth.js
