@@ -15,6 +15,6 @@
   },
   "permissions": [
     "declarativeContent",
-    "http://example.com/*"
+    "http://api.tumblr.com/*"
   ]
 }
