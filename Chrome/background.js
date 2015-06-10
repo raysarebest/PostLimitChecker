@@ -11,7 +11,3 @@ chrome.runtime.onInstalled.addListener(function(){
     }]);
   });
 });
-//Function to get the post data from tumblr
-function getPostData(callback){
-  callback();
-}

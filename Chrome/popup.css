@@ -3,7 +3,9 @@ html{
   /*width: 100%;*/
   min-height: 100px;
   text-align: center;
+  /* The extension's background will be the same color as tumblr's */
   background: #36465d;
+  /* The text should be white (just like tumblr) */
   color: #fff;
 }
 h1{
