@@ -7,6 +7,8 @@ document.addEventListener("DOMContentLoaded", function(){
 function update(){
   //Get the name of the blog the user wants to check for, remove whitespace with a regex, and convert it to lowercase
   var blog = document.getElementById("blogfield").value.replace(/\s+/g, "").toLowerCase();
+  //Reset the currently displayed post count while we update
+  document.getElementById("count").innerHTML = "--";
   //Do some basic validation on the name
   if(blog !== ""){
     //Reset the alert message
@@ -45,6 +47,7 @@ function getPostsToday(input, blogName){
     midnight.setHours(0, 0, 0, 0);
     //Serialize the response into a JavaScript object
     var data = JSON.parse(this.response);
+    //Iterate over all the posts returned by the tumblr API
     for(var i = 0; i < data.response.posts.length; i++){
       //Check if the post was posted today
       if((data.response.posts[i].timestamp * 1000) >= midnight.getTime()){
