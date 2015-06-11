@@ -1,5 +1,3 @@
-//Variable to hold the total number of posts in this user's blog
-var postsToday = [];
 //Set up the click event for the button
 document.addEventListener("DOMContentLoaded", function(){
   //Get the button and add the listener to update the post count
@@ -7,34 +5,11 @@ document.addEventListener("DOMContentLoaded", function(){
 });
 //Function called each time the check button is clicked
 function update(){
-  var request = new XMLHttpRequest();
-  request.onload = function(){
-    //Turn the raw response into a valid object
-    var blogData = JSON.parse(this.response);
-    //Create a new Date and initialize it to midnight
-    var midnight = new Date();
-    midnight.setHours(0,0,0,0);
-    //Convert tumblr's time into a JavaScript compatible one, and get how many milliseconds it's been since midnight
-    var getTimeOffset = function(milliseconds){
-      return (milliseconds * 1000) - midnight.getTime();
-    }
-    //Keep track of the total number of the user's posts
-    var totalPosts = blogData.response.blog.posts;
-    //Generate a new API request to get the user's posts
-    var request = new XMLHttpRequest();
-    request.onload = function(){
-      //Convert the response to a valid object
-      var postData = JSON.parse(this.response);
-      console.log(postData);
-      getPostsToday(function(){});
-    };
-    request.overrideMimeType("application/json; charset=utf8");
-    request.open("GET", "http://api.tumblr.com/v2/blog/themanpagesoflife.tumblr.com/posts?api_key=" + oauth , true);
-    request.send();
-  };
-  request.overrideMimeType("application/json; charset=utf8");
-  request.open("GET", "http://api.tumblr.com/v2/blog/themanpagesoflife.tumblr.com/info?api_key=" + oauth, true);
-  request.send();
+  //Figure out how many posts the user has made today
+  getPostsToday(function(count){
+    //...and subtract that from 250 (post limit), and display it
+    document.getElementById("count").innerHTML = 250 - count;
+  });
 }
 //Function for a lot of the payload logic
 function getPostsToday(input){
@@ -44,20 +19,37 @@ function getPostsToday(input){
     getPostsToday.found = false;
     //Store the input to call when we're really done
     getPostsToday.callback = input;
+    //Initialize an array static variable to hold all the posts
+    getPostsToday.posts = [];
+    //Initialize the search offset to 0, so we're starting with the most recent
+    getPostsToday.searchOffset = 0;
   }
   //If it's an object returned by tumblr's API, then we need to analyze it
-  else if(typeof input == "object"){
-    var data = JSON.parse(input);
-  }
-  //We only want to continue if the first post hasn't been found yet
-  if(!getPostsToday.found){
+  else if(typeof input === "object"){
     //Figure out when midnight today is
     getPostsToday.midnight = new Date();
     getPostsToday.midnight.setHours(0, 0, 0, 0);
+    //Serialize the response into a JavaScript object
+    var data = JSON.parse(this.response);
+    console.log(data);
+    console.log(getPostsToday.searchOffset);
+    getPostsToday.found = true;
+    getPostsToday.callback();
+    return;
+  }
+  //We only want to continue if the first post hasn't been found yet
+  if(!getPostsToday.found){
+    //Create an API call to tumblr to get post data
     var request = new XMLHttpRequest();
+    //Set the callback to recursively call this function
     request.onload = getPostsToday;
+    //Make sure tumblr recognizes the MIME
     request.overrideMimeType("application/json; charset=utf8");
-    request.open("GET", "http://api.tumblr.com/v2/blog/themanpagesoflife.tumblr.com/posts?api_key=" + oauth, true);
+    //Start the interaction with tumblr's servers, and make it asynchronous
+    request.open("GET", "http://api.tumblr.com/v2/blog/themanpagesoflife.tumblr.com/posts?api_key=" + oauth + "&offset=" + getPostsToday.searchOffset.toString(), true);
+    //Ask for the API data
     request.send();
+    //Increment the offset by 20 for the next call
+    getPostsToday.searchOffset += 20;
   }
 }
