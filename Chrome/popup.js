@@ -27,15 +27,23 @@ function getPostsToday(input){
   //If it's an object returned by tumblr's API, then we need to analyze it
   else if(typeof input === "object"){
     //Figure out when midnight today is
-    getPostsToday.midnight = new Date();
-    getPostsToday.midnight.setHours(0, 0, 0, 0);
+    var midnight = new Date();
+    midnight.setHours(0, 0, 0, 0);
     //Serialize the response into a JavaScript object
     var data = JSON.parse(this.response);
-    console.log(data);
-    console.log(getPostsToday.searchOffset);
-    getPostsToday.found = true;
-    getPostsToday.callback();
-    return;
+    for(var i = 0; i < data.response.posts.length; i++){
+      //Check if the post was posted today
+      if((data.response.posts[i].timestamp * 1000) >= midnight.getTime()){
+        //If it was, append it to the array storing such posts
+        getPostsToday.posts.push(data.response.posts[i]);
+      }
+      else{
+        //Otherwise, say we've found our limit
+        getPostsToday.found = true;
+      }
+    }
+    //Increment the offset by the number of posts in this call, for the next call
+    getPostsToday.searchOffset += data.response.posts.length;
   }
   //We only want to continue if the first post hasn't been found yet
   if(!getPostsToday.found){
@@ -49,7 +57,10 @@ function getPostsToday(input){
     request.open("GET", "http://api.tumblr.com/v2/blog/themanpagesoflife.tumblr.com/posts?api_key=" + oauth + "&offset=" + getPostsToday.searchOffset.toString(), true);
     //Ask for the API data
     request.send();
-    //Increment the offset by 20 for the next call
-    getPostsToday.searchOffset += 20;
+  }
+  //If the most recent post has been found...
+  else{
+    //Call the callback function, and tell it how many posts there were today
+    getPostsToday.callback(getPostsToday.posts.length);
   }
 }
