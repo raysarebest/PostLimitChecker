@@ -4,6 +4,7 @@
   "short_name": "Post Limit",
   "description": "Make sure you never hit post limit again!",
   "version": "1.0",
+  "author": "Michael Hulet",
   "offline_enabled": false,
   "page_action": {
     "default_popup": "popup.html",
