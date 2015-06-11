@@ -1,6 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Post Limit Checker",
+  "short_name": "Post Limit",
   "description": "Make sure you never hit post limit again!",
   "version": "1.0",
   "offline_enabled": false,
@@ -11,7 +12,7 @@
   "icons" : {
     "16": "icons/16x16.png",
     "48": "icons/48x48.png",
-    "128": "icons/128x128.png" 
+    "128": "icons/128x128.png"
   },
   "background": {
     "scripts": ["background.js"],
