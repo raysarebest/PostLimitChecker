@@ -5,14 +5,26 @@ document.addEventListener("DOMContentLoaded", function(){
 });
 //Function called each time the check button is clicked
 function update(){
-  //Figure out how many posts the user has made today
-  getPostsToday(function(count){
-    //...and subtract that from 250 (post limit), and display it
-    document.getElementById("count").innerHTML = 250 - count;
-  });
+  //Get the name of the blog the user wants to check for, remove whitespace with a regex, and convert it to lowercase
+  var blog = document.getElementById("blogfield").value.replace(/\s+/g, "").toLowerCase();
+  //Do some basic validation on the name
+  if(blog !== ""){
+    //Reset the alert message
+    document.getElementById("alert").innerHTML = "";
+    //Figure out how many posts the user has made today
+    getPostsToday(function(count){
+      //...and subtract that from 250 (post limit), and display it
+      document.getElementById("count").innerHTML = 250 - count;
+    }, blog); /* Also pass in the name of the blog to check for */
+  }
+  //If it fails validation...
+  else{
+    //...tell the user
+    document.getElementById("alert").innerHTML = "That's not a valid blog";
+  }
 }
 //Function for a lot of the payload logic
-function getPostsToday(input){
+function getPostsToday(input, blogName){
   //Set up the function on first call
   if(typeof input === "function"){
     //When input is a function, it will be the first time the function will have been called, so there's guaranteed to be no first post found yet
@@ -23,6 +35,8 @@ function getPostsToday(input){
     getPostsToday.posts = [];
     //Initialize the search offset to 0, so we're starting with the most recent
     getPostsToday.searchOffset = 0;
+    //Cache the name of the blog the blog the user wants to check for
+    getPostsToday.blog = blogName;
   }
   //If it's an object returned by tumblr's API, then we need to analyze it
   else if(typeof input === "object"){
@@ -40,6 +54,8 @@ function getPostsToday(input){
       else{
         //Otherwise, say we've found our limit
         getPostsToday.found = true;
+        //End the loop execution
+        break;
       }
     }
     //Increment the offset by the number of posts in this call, for the next call
@@ -54,7 +70,7 @@ function getPostsToday(input){
     //Make sure tumblr recognizes the MIME
     request.overrideMimeType("application/json; charset=utf8");
     //Start the interaction with tumblr's servers, and make it asynchronous
-    request.open("GET", "http://api.tumblr.com/v2/blog/themanpagesoflife.tumblr.com/posts?api_key=" + oauth + "&offset=" + getPostsToday.searchOffset.toString(), true);
+    request.open("GET", "http://api.tumblr.com/v2/blog/" + getPostsToday.blog + ".tumblr.com/posts?api_key=" + oauth + "&offset=" + getPostsToday.searchOffset.toString(), true);
     //Ask for the API data
     request.send();
   }

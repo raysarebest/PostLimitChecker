@@ -19,3 +19,7 @@ p{
 input{
   margin: 10px auto;
 }
+#alert{
+  /* Color any alert messages red */
+  color: #f00;
+}
